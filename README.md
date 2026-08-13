@@ -1,5 +1,3 @@
 # Franca Têxtil Summit 2026
 
-Projeto oficial do site e painel administrativo do Expo Franca Têxtil Summit 2026.
-
-Stack planejada: Next.js + TypeScript + Vercel + Supabase.
+Site oficial da Expo Franca Têxtil Summit 2026, com experiência visual V2, CMS próprio e publicação contínua via Vercel.
