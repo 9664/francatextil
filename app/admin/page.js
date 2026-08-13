@@ -1,3 +1,3 @@
-import AdminClient from './AdminClient';
+import AdminEdge from './AdminEdge';
 export const metadata={title:'Admin | Franca Têxtil'};
-export default function AdminPage(){return <AdminClient/>}
+export default function AdminPage(){return <AdminEdge/>}
