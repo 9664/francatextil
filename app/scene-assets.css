@@ -3,4 +3,5 @@
 @import './v2-tail.css';
 .scene{background-image:linear-gradient(125deg,rgba(2,5,38,.32),rgba(7,16,75,.28)),url('/scene1.webp')}
 .exhibitorBoard{min-height:425px;border:1px solid rgba(255,255,255,.12);border-radius:20px;background-image:url('/exhibitors.webp');background-color:#020526;background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important;position:relative;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.24)}
+.v2footer{display:block!important;grid-template-columns:none!important;gap:0!important}
 @media(max-width:700px){.exhibitorBoard{min-height:285px}}
