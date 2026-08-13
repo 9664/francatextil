@@ -1,7 +1,6 @@
-.scene{background-image:radial-gradient(circle at 75% 25%,rgba(0,200,255,.18),transparent 26%),linear-gradient(125deg,#020526 0%,#07104b 55%,#020526 100%)}
-.scene2{background-image:radial-gradient(circle at 20% 55%,rgba(255,22,138,.18),transparent 30%),linear-gradient(135deg,#020526,#0b1355)}
-.scene3{background-image:radial-gradient(circle at 75% 55%,rgba(255,213,0,.14),transparent 30%),linear-gradient(125deg,#020526,#06123e)}
-.scene4{background-image:radial-gradient(circle at 45% 20%,rgba(0,200,255,.22),transparent 28%),radial-gradient(circle at 75% 70%,rgba(255,22,138,.15),transparent 30%),linear-gradient(145deg,#01031c,#07104b)}
-.scene5{background-image:radial-gradient(circle at 25% 25%,rgba(255,213,0,.12),transparent 22%),linear-gradient(145deg,#020526,#11155b)}
-.exhibitorBoard{min-height:240px;border:1px solid rgba(255,255,255,.12);border-radius:20px;background:radial-gradient(circle at 50% 50%,rgba(0,200,255,.08),transparent 45%),linear-gradient(145deg,#07104b,#020526);position:relative;overflow:hidden}
-.exhibitorBoard:before{content:'EXPOSITORES CONFIRMADOS';position:absolute;inset:0;display:grid;place-items:center;color:rgba(255,255,255,.08);font-size:clamp(34px,6vw,90px);font-weight:1000;letter-spacing:-.05em}
+@import './v2-core.css';
+@import './v2-content.css';
+@import './v2-tail.css';
+.scene{background-image:linear-gradient(125deg,rgba(2,5,38,.32),rgba(7,16,75,.28)),url('/scene1.webp')}
+.exhibitorBoard{min-height:425px;border:1px solid rgba(255,255,255,.12);border-radius:20px;background-image:url('/exhibitors.webp');background-color:#020526;background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important;position:relative;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.24)}
+@media(max-width:700px){.exhibitorBoard{min-height:285px}}
