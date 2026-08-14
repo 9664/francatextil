@@ -18,7 +18,7 @@ export default function LogoAssetFixes(){
     b64ToBlobUrl('/pedroso-logo.b64').then(blobUrl=>{
       if(!alive){URL.revokeObjectURL(blobUrl);return;}
       url=blobUrl;
-      document.querySelectorAll('img[alt="PEDROSO TÊXTIL"]').forEach(img=>{
+      document.querySelectorAll('.logoRun .logoCard:nth-child(3) img').forEach(img=>{
         img.removeAttribute('srcset');
         img.src=blobUrl;
       });
