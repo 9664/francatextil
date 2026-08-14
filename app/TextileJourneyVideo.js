@@ -26,7 +26,6 @@ export default function TextileJourneyVideo(){
   const sectionRef=useRef(null);
   const videoRef=useRef(null);
   const rafRef=useRef(0);
-  const targetTimeRef=useRef(0);
   const [src,setSrc]=useState('');
   const [progress,setProgress]=useState(0);
   const [chapter,setChapter]=useState(0);
@@ -76,7 +75,6 @@ export default function TextileJourneyVideo(){
       if(video.readyState>=1&&Number.isFinite(video.duration)&&video.duration>0){
         video.pause();
         const t=Math.min(video.duration-.04,Math.max(.01,p*(video.duration-.08)));
-        targetTimeRef.current=t;
         if(Math.abs(video.currentTime-t)>.008){
           try{video.currentTime=t;}catch{}
         }
@@ -114,10 +112,7 @@ export default function TextileJourneyVideo(){
   const c=CHAPTERS[chapter];
   return <section ref={sectionRef} id="do-fio-ao-clique" className="cinematicJourney">
     <div className="cinematicSticky">
-      <div className="cinematicPoster" aria-hidden="true"/>
       <video ref={videoRef} className={`cinematicVideo ${status==='ready'?'isReady':''}`} src={src||undefined} muted playsInline preload="auto" aria-label="Jornada visual do fio ao produto"/>
-      <div className="cinematicShade" aria-hidden="true"/>
-      <div className="cinematicLight" aria-hidden="true"/>
 
       <div className="cinematicCopy" key={chapter}>
         <span>{c.kicker}</span>
