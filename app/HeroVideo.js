@@ -2,37 +2,61 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+const HERO_PARTS=[
+  '/hero-v6/fix00a.b64','/hero-v6/fix00b.b64',
+  '/hero-v6/fix01a.b64','/hero-v6/fix01b.b64',
+  '/hero-v6/part02.b64','/hero-v6/part03.b64','/hero-v6/part04.b64','/hero-v6/part05.b64'
+];
+
 export default function HeroVideo({ticketUrl,whatsappUrl,location='LOCAL EM BREVE'}){
   const videoRef=useRef(null);
   const [videoSrc,setVideoSrc]=useState('');
+  const [mediaStatus,setMediaStatus]=useState('loading');
 
   useEffect(()=>{
     let alive=true;
     let objectUrl='';
-    fetch('/hero-video.b64')
-      .then(r=>{if(!r.ok)throw new Error('video');return r.text();})
-      .then(encoded=>{
+    Promise.all(HERO_PARTS.map(url=>fetch(url,{cache:'force-cache'}).then(r=>{
+      if(!r.ok) throw new Error(`hero:${url}`);
+      return r.text();
+    })))
+      .then(parts=>{
         if(!alive)return;
-        const clean=encoded.replace(/\s+/g,'');
+        const clean=parts.join('').replace(/\s+/g,'');
         const binary=atob(clean);
         const bytes=new Uint8Array(binary.length);
         for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
         objectUrl=URL.createObjectURL(new Blob([bytes],{type:'video/mp4'}));
         setVideoSrc(objectUrl);
-      }).catch(()=>{});
+      })
+      .catch(err=>{
+        console.error('Hero media failed',err);
+        if(alive)setMediaStatus('error');
+      });
     return()=>{alive=false;if(objectUrl)URL.revokeObjectURL(objectUrl);};
   },[]);
 
   useEffect(()=>{
     const video=videoRef.current;
     if(!video||!videoSrc)return;
-    const start=()=>video.play().catch(()=>{});
-    if(video.readyState>=2)start(); else video.addEventListener('canplay',start,{once:true});
-    return()=>video.removeEventListener('canplay',start);
+    const ready=()=>{
+      setMediaStatus('ready');
+      video.muted=true;
+      video.play().catch(()=>setMediaStatus('ready'));
+    };
+    const failed=()=>setMediaStatus('error');
+    if(video.readyState>=2)ready();
+    else video.addEventListener('canplay',ready,{once:true});
+    video.addEventListener('error',failed,{once:true});
+    return()=>{
+      video.removeEventListener('canplay',ready);
+      video.removeEventListener('error',failed);
+    };
   },[videoSrc]);
 
   return <section id="inicio" className="heroVideoSection">
-    <video ref={videoRef} className="heroVideoBg" src={videoSrc||undefined} poster="/scene1.webp" autoPlay muted loop playsInline preload="auto" aria-hidden="true"/>
+    <img className="heroVideoPoster" src="/scene1.webp" alt="" aria-hidden="true"/>
+    <video ref={videoRef} className="heroVideoBg" src={videoSrc||undefined} autoPlay muted loop playsInline preload="auto" aria-hidden="true"/>
     <div className="heroVideoShade" aria-hidden="true"/>
     <div className="heroVideoThreads" aria-hidden="true"><i/><i/><i/></div>
     <div className="heroVideoContent">
@@ -43,5 +67,6 @@ export default function HeroVideo({ticketUrl,whatsappUrl,location='LOCAL EM BREV
     </div>
     <div className="heroVideoLocation">{location}</div>
     <a className="heroNext" href="#do-fio-ao-clique">ENTRE NA JORNADA <span>↓</span></a>
+    <div className={`heroMediaStatus ${mediaStatus==='ready'?'ready':''}`}>{mediaStatus==='loading'?'CARREGANDO EXPERIÊNCIA':mediaStatus==='error'?'VÍDEO EM MODO DE SEGURANÇA':''}</div>
   </section>;
 }
