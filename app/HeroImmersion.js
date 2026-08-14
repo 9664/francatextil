@@ -18,12 +18,12 @@ export default function HeroImmersion({ticketUrl,whatsappUrl,location='LOCAL EM 
   useEffect(()=>{
     let alive=true;
     let objectUrl='';
-    const parts=Array.from({length:8},(_,i)=>`/video-parts/part${String(i).padStart(2,'0')}.b64`);
-    Promise.all(parts.map(url=>fetch(url).then(r=>{if(!r.ok)throw new Error(url);return r.text();})))
-      .then(chunks=>{
+    fetch('/hero-video.b64')
+      .then(r=>{if(!r.ok)throw new Error('video');return r.text();})
+      .then(encoded=>{
         if(!alive)return;
-        const encoded=chunks.join('').replace(/\s+/g,'');
-        const binary=atob(encoded);
+        const clean=encoded.replace(/\s+/g,'');
+        const binary=atob(clean);
         const bytes=new Uint8Array(binary.length);
         for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
         objectUrl=URL.createObjectURL(new Blob([bytes],{type:'video/mp4'}));
@@ -36,7 +36,7 @@ export default function HeroImmersion({ticketUrl,whatsappUrl,location='LOCAL EM 
     const section=sectionRef.current;
     const video=videoRef.current;
     if(!section)return;
-    let lastStage=-1,lastChain=-1,targetTime=0;
+    let lastStage=-1,lastChain=-1;
 
     const tick=()=>{
       const rect=section.getBoundingClientRect();
@@ -44,10 +44,10 @@ export default function HeroImmersion({ticketUrl,whatsappUrl,location='LOCAL EM 
       const p=clamp((-rect.top)/travel);
       section.style.setProperty('--journey',p.toFixed(4));
 
-      const nextStage=p<.23?0:p<.48?1:p<.75?2:3;
+      const nextStage=p<.22?0:p<.46?1:p<.74?2:3;
       if(nextStage!==lastStage){lastStage=nextStage;setStage(nextStage);}
       if(nextStage===2){
-        const local=clamp((p-.48)/.27);
+        const local=clamp((p-.46)/.28);
         const idx=Math.min(CHAIN.length-1,Math.floor(local*CHAIN.length));
         if(idx!==lastChain){lastChain=idx;setChainIndex(idx);}
       }
@@ -55,16 +55,15 @@ export default function HeroImmersion({ticketUrl,whatsappUrl,location='LOCAL EM 
       if(video&&video.readyState>=2){
         const duration=Number.isFinite(video.duration)&&video.duration>0?video.duration:durationRef.current;
         durationRef.current=duration;
-        if(p>.015&&!scrubRef.current){
+        if(p>.025&&!scrubRef.current){
           scrubRef.current=true;
           video.pause();
-          try{video.currentTime=0;}catch{}
         }
         if(scrubRef.current){
-          targetTime=clamp(p/.98)*Math.max(.1,duration-.05);
-          const diff=targetTime-video.currentTime;
-          if(Math.abs(diff)>.025){
-            try{video.currentTime+=diff*.18;}catch{}
+          const target=clamp((p-.025)/.95)*Math.max(.1,duration-.06);
+          const diff=target-video.currentTime;
+          if(Math.abs(diff)>.018){
+            try{video.currentTime+=diff*.24;}catch{}
           }
         }
       }
@@ -97,7 +96,6 @@ export default function HeroImmersion({ticketUrl,whatsappUrl,location='LOCAL EM 
       <div className="threadSignature" aria-hidden="true"><i/><i/><i/></div>
 
       <div className={'journeyPanel arrival '+(stage===0?'isActive':'')}>
-        <div className="arrivalBrand"><img src="/brand-lockup.webp" alt="Expo Franca Têxtil Summit"/></div>
         <div className="arrivalCopy">
           <span className="journeyKicker">16 — 17 SETEMBRO 2026 · FRANCA/SP</span>
           <h1>UMA NOVA INDÚSTRIA<br/><em>ESTÁ GANHANDO ESCALA.</em></h1>
