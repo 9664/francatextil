@@ -1,5 +1,6 @@
 import { publicQuery } from '../lib/supabase';
 import HeroImmersion from './HeroImmersion';
+import LogoCarousel from './LogoCarousel';
 
 const fallbackExhibitors=['GOL TÊXTIL','ECOMMERCE VERSO','PEDROSO TÊXTIL','BETINIS','ZANONE MALHAS','ZANONE CURSOS','ZANONE CONTÁBIL','STELLAR PRINT','MAGNA TECH','BM DO BRASIL','MAQ CENTER','MECOLOUR','HR TÊXTIL','YGUAÇU MÁQUINAS','METAL SETE','FINAL Z','FENIZ TÊXTIL','MARGIS','TW PRINT'];
 const fallbackAgenda=[['09h00','Abertura oficial','Boas-vindas e panorama do setor têxtil'],['10h00','Do produto ao digital','Como criar, validar e lançar produtos de moda'],['14h00','Marketplaces e varejo','Estratégias para escalar vendas online'],['16h30','Cadeia produtiva e inovação','Tecnologia, maquinário e novos processos'],['19h00','Conexões e negócios','Networking e oportunidades']];
@@ -32,9 +33,9 @@ export default async function Home(){
 
    <section id="expositores" className="v3section logoSection">
      <div className="v3wrap">
-       <div className="v3sectionHead"><span>04 / ÁREA DE NEGÓCIOS</span><h2>QUEM JÁ ESTÁ<br/><em>DENTRO.</em></h2><p>As marcas que você enviou agora entram como parte visual real da home. Abaixo delas, mantemos a lista completa do CMS para ninguém desaparecer quando novos expositores forem confirmados.</p></div>
-       <figure className="logoWall"><img src="/exhibitors.webp?v=3" alt="Logomarcas dos expositores confirmados da Expo Franca Têxtil Summit"/><figcaption>Logomarcas recebidas da organização</figcaption></figure>
-       {missing.length>0&&<div className="pendingLogos"><span>LOGOS EM ATUALIZAÇÃO</span>{missing.map(x=><b key={x}>{x}</b>)}</div>}
+       <div className="v3sectionHead"><span>04 / ÁREA DE NEGÓCIOS</span><h2>MARCAS QUE JÁ<br/><em>ESTÃO NA TRAMA.</em></h2><p>As logomarcas enviadas pela organização agora aparecem individualmente em um carrossel contínuo. A lista do CMS permanece abaixo para manter todos os expositores visíveis.</p></div>
+       <LogoCarousel/>
+       {missing.length>0&&<div className="pendingLogos"><span>AGUARDANDO ARQUIVO DE LOGO</span>{missing.map(x=><b key={x}>{x}</b>)}</div>}
        <div className="allExhibitors">{exhibitors.map((x,i)=><span key={x}><small>{String(i+1).padStart(2,'0')}</small>{x}</span>)}</div>
      </div>
    </section>
@@ -46,11 +47,11 @@ export default async function Home(){
 
    <section className="v3section audienceSection"><div className="v3wrap"><div className="audienceTitle"><span>06 / PARA QUEM É</span><h2>SE VOCÊ FAZ A CADEIA GIRAR,<br/><em>O SUMMIT É SEU.</em></h2></div><div className="audienceGrid">{['INDÚSTRIAS & CONFECÇÕES','MARCAS & EMPREENDEDORES','E-COMMERCES & MARKETPLACES','FORNECEDORES & PRESTADORES','ESTUDANTES & PROFISSIONAIS'].map((x,i)=><div key={x}><small>0{i+1}</small><b>{x}</b></div>)}</div></div></section>
 
-   <section id="noticias" className="v3section newsSection"><div className="v3wrap"><div className="newsTitle"><span>07 / CONTEÚDO</span><h2>O SETOR JÁ<br/><em>SE MOVIMENTA.</em></h2></div>{articles.length?<div className="v3NewsGrid">{articles.map(a=><article key={a.slug}><small>NOTÍCIA</small><h3>{a.title}</h3><p>{a.excerpt}</p><a href={`/noticias/${a.slug}`}>Ler matéria →</a></article>)}</div>:<article className="v3AnchorNews"><small>MATÉRIA ÂNCORA</small><h3>Franca Têxtil Summit 2026 quer transformar a cidade em vitrine da nova economia têxtil</h3><p>Tradição produtiva, tecnologia, empreendedorismo e venda direta ao consumidor se encontram em setembro.</p><a href="https://amofranca.com/materia/franca-textil-summit-2026-quer-transformar-a-cidade-em-vitrine-da-nova-economia-textil" target="_blank" rel="noopener">Ler no Amo Franca →</a></article>}</div></section>
+   <section id="noticias" className="v3section newsSection"><div className="v3wrap"><div className="newsTitle"><span>07 / CONTEÚDO</span><h2>O SETOR JÁ<br/><em>SE MOVIMENTA.</em></h2></div>{articles.length?<div className="v3NewsGrid">{articles.map(a=><article key={a.slug}><small>NOTÍCIA</small><h3>{a.title}</h3><p>{a.excerpt}</p><a href={`/noticias/${a.slug}`}>Ler matéria →</a></article>)}</div>:<article className="v3AnchorNews"><small>MATÉRIA ÂNCORA</small><h3>Franca Têxtil Summit 2026 quer transformar a cidade em vitrine da nova economia têxtil</h3><p>Um polo jovem, tecnologia, empreendedorismo e venda direta ao consumidor se encontram em setembro.</p><a href="https://amofranca.com/materia/franca-textil-summit-2026-quer-transformar-a-cidade-em-vitrine-da-nova-economia-textil" target="_blank" rel="noopener">Ler no Amo Franca →</a></article>}</div></section>
 
-   <section className="v3Final"><div className="v3wrap finalV3Grid"><div><span>16 — 17 SETEMBRO · FRANCA/SP</span><h2>ENTRE NESSA<br/><em>NOVA TRAMA.</em></h2></div><div><p>Conexões que transformam. Conteúdo que gera resultado. Negócios que movimentam uma nova economia têxtil.</p><a href={ticketUrl} target="_blank" rel="noopener">GARANTA SEU INGRESSO ↗</a><a className="finalWhats" href={whatsappUrl} target="_blank" rel="noopener">FALAR NO WHATSAPP</a></div></div></section>
+   <section className="v3Final"><div className="v3wrap finalV3Grid"><div><span>16 — 17 SETEMBRO · FRANCA/SP</span><h2>ENTRE NESSA<br/><em>NOVA TRAMA.</em></h2></div><div><p>Mais de 1.500 empresas, uma cadeia ainda em expansão e dois dias para conectar quem produz, vende, fornece e transforma.</p><a href={ticketUrl} target="_blank" rel="noopener">GARANTA SEU INGRESSO ↗</a><a className="finalWhats" href={whatsappUrl} target="_blank" rel="noopener">FALAR NO WHATSAPP</a></div></div></section>
 
-   <footer className="v3footer"><div className="v3wrap footerV3Grid"><img src="/brand-lockup.webp" alt="Expo Franca Têxtil Summit"/><div><b>CONTATO</b><a href={whatsappUrl} target="_blank" rel="noopener">(16) 99267-9370</a><a href={instagramUrl} target="_blank" rel="noopener">@francatextil_</a></div><div><b>EVENTO</b><span>16 e 17 de setembro de 2026</span><span>Franca · São Paulo</span></div></div><div className="v3fine">© 2026 Expo Franca Têxtil Summit · *Dados do material-base sujeitos a validação da organização.</div></footer>
+   <footer className="v3footer"><div className="v3wrap footerV3Grid"><img src="/brand-lockup.webp" alt="Expo Franca Têxtil Summit"/><div><b>CONTATO</b><a href={whatsappUrl} target="_blank" rel="noopener">(16) 99267-9370</a><a href={instagramUrl} target="_blank" rel="noopener">@francatextil_</a></div><div><b>EVENTO</b><span>16 e 17 de setembro de 2026</span><span>Franca · São Paulo</span></div></div><div className="v3fine">© 2026 Expo Franca Têxtil Summit.</div></footer>
    <a className="v3WhatsFloat" href={whatsappUrl} target="_blank" rel="noopener" aria-label="Falar no WhatsApp">WHATSAPP ↗</a>
  </main>
 }
