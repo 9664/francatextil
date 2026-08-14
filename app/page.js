@@ -1,9 +1,14 @@
 import { publicQuery } from '../lib/supabase';
 import HeroImmersion from './HeroImmersion';
 import LogoCarousel from './LogoCarousel';
+import ProgramSchedule from './ProgramSchedule';
 
 const fallbackExhibitors=['GOL TÊXTIL','ECOMMERCE VERSO','PEDROSO TÊXTIL','BETINIS','ZANONE MALHAS','ZANONE CURSOS','ZANONE CONTÁBIL','STELLAR PRINT','MAGNA TECH','BM DO BRASIL','MAQ CENTER','MECOLOUR','HR TÊXTIL','YGUAÇU MÁQUINAS','METAL SETE','FINAL Z','FENIZ TÊXTIL','MARGIS','TW PRINT'];
-const fallbackAgenda=[['09h00','Abertura oficial','Boas-vindas e panorama do setor têxtil'],['10h00','Do produto ao digital','Como criar, validar e lançar produtos de moda'],['14h00','Marketplaces e varejo','Estratégias para escalar vendas online'],['16h30','Cadeia produtiva e inovação','Tecnologia, maquinário e novos processos'],['19h00','Conexões e negócios','Networking e oportunidades']];
+const fallbackAgenda16=[['09h00','Abertura oficial','Boas-vindas e panorama do setor têxtil'],['10h00','Do produto ao digital','Como criar, validar e lançar produtos de moda'],['14h00','Marketplaces e varejo','Estratégias para escalar vendas online'],['16h30','Cadeia produtiva e inovação','Tecnologia, maquinário e novos processos'],['19h00','Conexões e negócios','Networking e oportunidades']];
+
+function normalizeSchedule(rows,day){
+  return (rows||[]).filter(x=>String(x.event_day).includes(`2026-09-${day}`)).map(x=>({time:(x.starts_at||'').slice(0,5).replace(':','h'),title:x.title,description:x.description||''}));
+}
 
 export default async function Home(){
  const [exRows,scheduleRows,articleRows,settingsRows]=await Promise.all([
@@ -14,7 +19,9 @@ export default async function Home(){
  ]);
  const settings=Object.fromEntries((settingsRows||[]).map(x=>[x.key,x.value]));
  const exhibitors=(exRows?.length?exRows.map(x=>x.name):fallbackExhibitors);
- const agenda=(scheduleRows?.length?scheduleRows.filter(x=>String(x.event_day).includes('2026-09-16')).map(x=>[(x.starts_at||'').slice(0,5).replace(':','h'),x.title,x.description||'']):fallbackAgenda);
+ const agenda16=normalizeSchedule(scheduleRows,'16');
+ const agenda17=normalizeSchedule(scheduleRows,'17');
+ const items16=agenda16.length?agenda16:fallbackAgenda16.map(([time,title,description])=>({time,title,description}));
  const ticketUrl=settings.ticket_url?.url||settings.ticket_url||'https://duoticket.com.br/evento/7887/Franca-T%C3%AAxtil';
  const whatsappUrl=settings.whatsapp_url?.url||settings.whatsapp_url||'https://wa.me/5516992679370';
  const instagramUrl=settings.instagram_url?.url||settings.instagram_url||'https://www.instagram.com/francatextil_/';
@@ -38,7 +45,7 @@ export default async function Home(){
 
    <section id="programacao" className="v3section programSection"><div className="v3wrap programV3Grid">
      <div className="programIntro"><span>05 / PROGRAMAÇÃO</span><h2>DOIS DIAS.<br/><em>MUITO CONTEÚDO.</em></h2><p>Conteúdo aplicado para quem quer produzir, operar, vender e crescer. A agenda continua alimentada pelo CMS.</p></div>
-     <div className="programTimeline"><div className="programTabs"><b>16 SET</b><span>17 SET</span></div>{agenda.map(([t,h,p],i)=><article key={`${t}-${i}`}><time>{t}</time><div><h3>{h}</h3><p>{p}</p></div></article>)}</div>
+     <ProgramSchedule items16={items16} items17={agenda17}/>
    </div></section>
 
    <section className="v3section audienceSection"><div className="v3wrap"><div className="audienceTitle"><span>06 / PARA QUEM É</span><h2>SE VOCÊ FAZ A CADEIA GIRAR,<br/><em>O SUMMIT É SEU.</em></h2></div><div className="audienceGrid">{['INDÚSTRIAS & CONFECÇÕES','MARCAS & EMPREENDEDORES','E-COMMERCES & MARKETPLACES','FORNECEDORES & PRESTADORES','ESTUDANTES & PROFISSIONAIS'].map((x,i)=><div key={x}><small>0{i+1}</small><b>{x}</b></div>)}</div></div></section>
