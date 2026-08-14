@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 560" fill="none">
+<defs>
+  <linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0569A3"/><stop offset="1" stop-color="#00B8E8"/></linearGradient>
+  <linearGradient id="p" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#D40078"/><stop offset="1" stop-color="#FF3CAD"/></linearGradient>
+  <linearGradient id="y" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFB900"/><stop offset="1" stop-color="#FFD21A"/></linearGradient>
+</defs>
+<g stroke-linecap="square" stroke-width="56">
+  <path d="M120 170L430 480" stroke="url(#b)"/>
+  <path d="M165 125L475 435" stroke="url(#b)"/>
+  <path d="M210 80L520 390" stroke="url(#b)"/>
+  <path d="M255 60L555 360" stroke="url(#p)"/>
+  <path d="M300 105L555 360" stroke="url(#p)"/>
+  <path d="M345 150L555 360" stroke="url(#p)"/>
+  <path d="M525 135L205 455" stroke="url(#p)"/>
+  <path d="M480 90L160 410" stroke="url(#p)"/>
+  <path d="M390 135L105 420" stroke="url(#y)"/>
+  <path d="M435 180L150 465" stroke="url(#y)"/>
+  <path d="M480 225L205 500" stroke="url(#y)"/>
+</g>
+</svg>
