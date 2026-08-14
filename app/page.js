@@ -4,7 +4,6 @@ import LogoCarousel from './LogoCarousel';
 
 const fallbackExhibitors=['GOL TÊXTIL','ECOMMERCE VERSO','PEDROSO TÊXTIL','BETINIS','ZANONE MALHAS','ZANONE CURSOS','ZANONE CONTÁBIL','STELLAR PRINT','MAGNA TECH','BM DO BRASIL','MAQ CENTER','MECOLOUR','HR TÊXTIL','YGUAÇU MÁQUINAS','METAL SETE','FINAL Z','FENIZ TÊXTIL','MARGIS','TW PRINT'];
 const fallbackAgenda=[['09h00','Abertura oficial','Boas-vindas e panorama do setor têxtil'],['10h00','Do produto ao digital','Como criar, validar e lançar produtos de moda'],['14h00','Marketplaces e varejo','Estratégias para escalar vendas online'],['16h30','Cadeia produtiva e inovação','Tecnologia, maquinário e novos processos'],['19h00','Conexões e negócios','Networking e oportunidades']];
-const logosRecebidos=['GOL TÊXTIL','ECOMMERCE VERSO','PEDROSO TÊXTIL','BETINIS','ZANONE MALHAS','STELLAR PRINT','MAGNA TECH','BM DO BRASIL','MAQ CENTER','MECOLOUR','HR TÊXTIL','YGUAÇU MÁQUINAS','METAL SETE','FINAL Z','TW PRINT'];
 
 export default async function Home(){
  const [exRows,scheduleRows,articleRows,settingsRows]=await Promise.all([
@@ -21,7 +20,6 @@ export default async function Home(){
  const instagramUrl=settings.instagram_url?.url||settings.instagram_url||'https://www.instagram.com/francatextil_/';
  const location=settings.location?.name||settings.location||'LOCAL EM BREVE';
  const articles=articleRows||[];
- const missing=exhibitors.filter(x=>!logosRecebidos.includes(x));
  return <main className="v3site">
    <header className="v3nav">
      <a href="#inicio" className="v3brand"><img src="/brand-lockup.webp" alt="Expo Franca Têxtil Summit"/></a>
@@ -33,10 +31,8 @@ export default async function Home(){
 
    <section id="expositores" className="v3section logoSection">
      <div className="v3wrap">
-       <div className="v3sectionHead"><span>04 / ÁREA DE NEGÓCIOS</span><h2>MARCAS QUE JÁ<br/><em>ESTÃO NA TRAMA.</em></h2><p>As logomarcas enviadas pela organização agora aparecem individualmente em um carrossel contínuo. A lista do CMS permanece abaixo para manter todos os expositores visíveis.</p></div>
+       <div className="v3sectionHead"><span>04 / ÁREA DE NEGÓCIOS</span><h2>MARCAS QUE JÁ<br/><em>ESTÃO NA TRAMA.</em></h2><p>Expositores confirmados apresentados em movimento contínuo.</p></div>
        <LogoCarousel/>
-       {missing.length>0&&<div className="pendingLogos"><span>AGUARDANDO ARQUIVO DE LOGO</span>{missing.map(x=><b key={x}>{x}</b>)}</div>}
-       <div className="allExhibitors">{exhibitors.map((x,i)=><span key={x}><small>{String(i+1).padStart(2,'0')}</small>{x}</span>)}</div>
      </div>
    </section>
 
