@@ -11,6 +11,15 @@ const CHAPTERS=[
   {at:.89,kicker:'DO FIO AO CLIQUE',title:'TODA A CADEIA NO MESMO MOVIMENTO.',copy:'Produção, tecnologia, marca e mercado se encontram no Franca Têxtil Summit.'}
 ];
 
+const JOURNEY_PARTS=[
+  '/journey-v5/part00.b64','/journey-v5/part01.b64',
+  '/journey-v5/fix02a.b64','/journey-v5/fix02b.b64',
+  '/journey-v5/part03.b64','/journey-v5/part04.b64','/journey-v5/part05.b64','/journey-v5/part06.b64','/journey-v5/part07.b64',
+  '/journey-v5/fix08a.b64','/journey-v5/fix08b.b64',
+  '/journey-v5/fix09a.b64','/journey-v5/fix09b.b64',
+  '/journey-v5/good10.b64','/journey-v5/part11.b64','/journey-v5/part12.b64'
+];
+
 const clamp=(n,min=0,max=1)=>Math.max(min,Math.min(max,n));
 
 export default function TextileJourneyVideo(){
@@ -20,12 +29,15 @@ export default function TextileJourneyVideo(){
   const [src,setSrc]=useState('');
   const [progress,setProgress]=useState(0);
   const [chapter,setChapter]=useState(0);
+  const [mediaStatus,setMediaStatus]=useState('loading');
 
   useEffect(()=>{
     let alive=true;
     let objectUrl='';
-    const parts=Array.from({length:7},(_,i)=>`/journey-video/part${String(i).padStart(2,'0')}.b64`);
-    Promise.all(parts.map(url=>fetch(url).then(r=>{if(!r.ok)throw new Error(url);return r.text();})))
+    Promise.all(JOURNEY_PARTS.map(url=>fetch(url,{cache:'force-cache'}).then(r=>{
+      if(!r.ok)throw new Error(`journey:${url}`);
+      return r.text();
+    })))
       .then(chunks=>{
         if(!alive)return;
         const binary=atob(chunks.join('').replace(/\s+/g,''));
@@ -33,14 +45,18 @@ export default function TextileJourneyVideo(){
         for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
         objectUrl=URL.createObjectURL(new Blob([bytes],{type:'video/mp4'}));
         setSrc(objectUrl);
-      }).catch(()=>{});
+      })
+      .catch(err=>{
+        console.error('Journey media failed',err);
+        if(alive)setMediaStatus('error');
+      });
     return()=>{alive=false;if(objectUrl)URL.revokeObjectURL(objectUrl);};
   },[]);
 
   useEffect(()=>{
     const section=sectionRef.current;
     const video=videoRef.current;
-    if(!section||!video)return;
+    if(!section||!video||!src)return;
     let queued=false;
 
     const update=()=>{
@@ -69,16 +85,24 @@ export default function TextileJourneyVideo(){
       queued=true;
       rafRef.current=requestAnimationFrame(update);
     };
-    const onMeta=()=>{video.pause();try{video.currentTime=.01;}catch{};update();};
+    const onMeta=()=>{
+      setMediaStatus('ready');
+      video.pause();
+      try{video.currentTime=.01;}catch{}
+      update();
+    };
+    const onError=()=>setMediaStatus('error');
 
     window.addEventListener('scroll',onScroll,{passive:true});
     window.addEventListener('resize',onScroll,{passive:true});
     video.addEventListener('loadedmetadata',onMeta);
-    update();
+    video.addEventListener('error',onError,{once:true});
+    if(video.readyState>=1)onMeta(); else update();
     return()=>{
       window.removeEventListener('scroll',onScroll);
       window.removeEventListener('resize',onScroll);
       video.removeEventListener('loadedmetadata',onMeta);
+      video.removeEventListener('error',onError);
       cancelAnimationFrame(rafRef.current);
     };
   },[src]);
@@ -86,6 +110,7 @@ export default function TextileJourneyVideo(){
   const c=CHAPTERS[chapter];
   return <section ref={sectionRef} id="do-fio-ao-clique" className="cinematicJourney">
     <div className="cinematicSticky">
+      <div className="cinematicFallback" aria-hidden="true"/>
       <video ref={videoRef} className="cinematicVideo" src={src||undefined} muted playsInline preload="auto" aria-label="Jornada visual do fio ao produto"/>
       <div className="cinematicShade" aria-hidden="true"/>
       <div className="cinematicLight" aria-hidden="true"/>
@@ -96,13 +121,10 @@ export default function TextileJourneyVideo(){
         <p>{c.copy}</p>
       </div>
 
-      <div className="cinematicProgress" aria-hidden="true">
-        <b style={{transform:`scaleX(${progress})`}}/>
-      </div>
-      <div className="cinematicDots" aria-hidden="true">
-        {CHAPTERS.map((_,i)=><i key={i} className={i===chapter?'active':i<chapter?'passed':''}/>) }
-      </div>
+      <div className="cinematicProgress" aria-hidden="true"><b style={{transform:`scaleX(${progress})`}}/></div>
+      <div className="cinematicDots" aria-hidden="true">{CHAPTERS.map((_,i)=><i key={i} className={i===chapter?'active':i<chapter?'passed':''}/>)}</div>
       <div className="cinematicHint">ROLE DEVAGAR · PARE PARA CONGELAR A CENA</div>
+      <div className={`cinematicLoader ${mediaStatus==='ready'?'hide':''}`}>{mediaStatus==='error'?'MÍDIA INDISPONÍVEL · CONTEÚDO PRESERVADO':'CARREGANDO JORNADA...'}</div>
     </div>
   </section>;
 }
