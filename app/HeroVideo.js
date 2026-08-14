@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 
 const HERO_PARTS=[
-  '/hero-v6/fix00a.b64','/hero-v6/fix00b.b64',
-  '/hero-v6/fix01a.b64','/hero-v6/fix01b.b64',
+  '/hero-v6/v2-00-0.b64','/hero-v6/v2-00-1.b64','/hero-v6/v2-00-2.b64','/hero-v6/v2-00-3.b64',
+  '/hero-v6/v2-01-0.b64','/hero-v6/v2-01-1.b64','/hero-v6/v2-01-2.b64','/hero-v6/v2-01-3.b64',
   '/hero-v6/part02.b64','/hero-v6/part03.b64','/hero-v6/part04.b64','/hero-v6/part05.b64'
 ];
 
