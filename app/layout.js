@@ -2,7 +2,7 @@ import './globals.css';
 import './v3.css';
 import './program.css';
 import './audience-v3.css';
-import './journey-3d.css';
+import './journey-video.css';
 
 export const metadata={
  title:'Expo Franca Têxtil Summit 2026',
