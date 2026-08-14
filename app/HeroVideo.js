@@ -19,8 +19,7 @@ export default function HeroVideo({ticketUrl,whatsappUrl,location='LOCAL EM BREV
         for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
         objectUrl=URL.createObjectURL(new Blob([bytes],{type:'video/mp4'}));
         setVideoSrc(objectUrl);
-      })
-      .catch(()=>{});
+      }).catch(()=>{});
     return()=>{alive=false;if(objectUrl)URL.revokeObjectURL(objectUrl);};
   },[]);
 
@@ -28,8 +27,7 @@ export default function HeroVideo({ticketUrl,whatsappUrl,location='LOCAL EM BREV
     const video=videoRef.current;
     if(!video||!videoSrc)return;
     const start=()=>video.play().catch(()=>{});
-    if(video.readyState>=2)start();
-    else video.addEventListener('canplay',start,{once:true});
+    if(video.readyState>=2)start(); else video.addEventListener('canplay',start,{once:true});
     return()=>video.removeEventListener('canplay',start);
   },[videoSrc]);
 
@@ -44,6 +42,6 @@ export default function HeroVideo({ticketUrl,whatsappUrl,location='LOCAL EM BREV
       <div className="heroVideoActions"><a href={ticketUrl} target="_blank" rel="noopener">GARANTA SEU INGRESSO ↗</a><a className="outline" href={whatsappUrl} target="_blank" rel="noopener">WHATSAPP</a></div>
     </div>
     <div className="heroVideoLocation">{location}</div>
-    <a className="heroNext" href="#do-fio-ao-clique">DESCUBRA A JORNADA 3D <span>↓</span></a>
+    <a className="heroNext" href="#do-fio-ao-clique">ENTRE NA JORNADA <span>↓</span></a>
   </section>;
 }
