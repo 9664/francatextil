@@ -26,10 +26,11 @@ export default function TextileJourneyVideo(){
   const sectionRef=useRef(null);
   const videoRef=useRef(null);
   const rafRef=useRef(0);
+  const targetTimeRef=useRef(0);
   const [src,setSrc]=useState('');
   const [progress,setProgress]=useState(0);
   const [chapter,setChapter]=useState(0);
-  const [mediaStatus,setMediaStatus]=useState('loading');
+  const [status,setStatus]=useState('loading');
 
   useEffect(()=>{
     let alive=true;
@@ -38,9 +39,10 @@ export default function TextileJourneyVideo(){
       if(!r.ok)throw new Error(`journey:${url}`);
       return r.text();
     })))
-      .then(chunks=>{
+      .then(parts=>{
         if(!alive)return;
-        const binary=atob(chunks.join('').replace(/\s+/g,''));
+        const encoded=parts.join('').replace(/\s+/g,'');
+        const binary=atob(encoded);
         const bytes=new Uint8Array(binary.length);
         for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
         objectUrl=URL.createObjectURL(new Blob([bytes],{type:'video/mp4'}));
@@ -48,7 +50,7 @@ export default function TextileJourneyVideo(){
       })
       .catch(err=>{
         console.error('Journey media failed',err);
-        if(alive)setMediaStatus('error');
+        if(alive)setStatus('error');
       });
     return()=>{alive=false;if(objectUrl)URL.revokeObjectURL(objectUrl);};
   },[]);
@@ -64,17 +66,18 @@ export default function TextileJourneyVideo(){
       const rect=section.getBoundingClientRect();
       const travel=Math.max(1,section.offsetHeight-window.innerHeight);
       const p=clamp(-rect.top/travel);
-      setProgress(prev=>Math.abs(prev-p)>.004?p:prev);
+      setProgress(prev=>Math.abs(prev-p)>.003?p:prev);
       section.style.setProperty('--journey-progress',p.toFixed(4));
 
       let idx=0;
       for(let i=0;i<CHAPTERS.length;i++)if(p>=CHAPTERS[i].at)idx=i;
       setChapter(prev=>prev===idx?prev:idx);
 
-      if(video.readyState>=1 && Number.isFinite(video.duration) && video.duration>0){
+      if(video.readyState>=1&&Number.isFinite(video.duration)&&video.duration>0){
         video.pause();
-        const t=Math.min(video.duration-.035,Math.max(.01,p*(video.duration-.07)));
-        if(Math.abs(video.currentTime-t)>.012){
+        const t=Math.min(video.duration-.04,Math.max(.01,p*(video.duration-.08)));
+        targetTimeRef.current=t;
+        if(Math.abs(video.currentTime-t)>.008){
           try{video.currentTime=t;}catch{}
         }
       }
@@ -86,18 +89,19 @@ export default function TextileJourneyVideo(){
       rafRef.current=requestAnimationFrame(update);
     };
     const onMeta=()=>{
-      setMediaStatus('ready');
       video.pause();
+      setStatus('ready');
       try{video.currentTime=.01;}catch{}
       update();
     };
-    const onError=()=>setMediaStatus('error');
+    const onError=()=>setStatus('error');
 
     window.addEventListener('scroll',onScroll,{passive:true});
     window.addEventListener('resize',onScroll,{passive:true});
     video.addEventListener('loadedmetadata',onMeta);
-    video.addEventListener('error',onError,{once:true});
+    video.addEventListener('error',onError);
     if(video.readyState>=1)onMeta(); else update();
+
     return()=>{
       window.removeEventListener('scroll',onScroll);
       window.removeEventListener('resize',onScroll);
@@ -110,8 +114,8 @@ export default function TextileJourneyVideo(){
   const c=CHAPTERS[chapter];
   return <section ref={sectionRef} id="do-fio-ao-clique" className="cinematicJourney">
     <div className="cinematicSticky">
-      <div className="cinematicFallback" aria-hidden="true"/>
-      <video ref={videoRef} className="cinematicVideo" src={src||undefined} muted playsInline preload="auto" aria-label="Jornada visual do fio ao produto"/>
+      <div className="cinematicPoster" aria-hidden="true"/>
+      <video ref={videoRef} className={`cinematicVideo ${status==='ready'?'isReady':''}`} src={src||undefined} muted playsInline preload="auto" aria-label="Jornada visual do fio ao produto"/>
       <div className="cinematicShade" aria-hidden="true"/>
       <div className="cinematicLight" aria-hidden="true"/>
 
@@ -124,7 +128,8 @@ export default function TextileJourneyVideo(){
       <div className="cinematicProgress" aria-hidden="true"><b style={{transform:`scaleX(${progress})`}}/></div>
       <div className="cinematicDots" aria-hidden="true">{CHAPTERS.map((_,i)=><i key={i} className={i===chapter?'active':i<chapter?'passed':''}/>)}</div>
       <div className="cinematicHint">ROLE DEVAGAR · PARE PARA CONGELAR A CENA</div>
-      <div className={`cinematicLoader ${mediaStatus==='ready'?'hide':''}`}>{mediaStatus==='error'?'MÍDIA INDISPONÍVEL · CONTEÚDO PRESERVADO':'CARREGANDO JORNADA...'}</div>
+      {status==='loading'&&<div className="cinematicStatus">CARREGANDO JORNADA</div>}
+      {status==='error'&&<div className="cinematicStatus error">RECARREGUE A PÁGINA PARA ATIVAR A JORNADA</div>}
     </div>
   </section>;
 }
