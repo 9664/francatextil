@@ -1,6 +1,6 @@
 import { publicQuery } from '../lib/supabase';
 import HeroVideo from './HeroVideo';
-import TextileJourney3D from './TextileJourney3D';
+import TextileJourneyVideo from './TextileJourneyVideo';
 import LogoCarousel from './LogoCarousel';
 import ProgramSchedule from './ProgramSchedule';
 
@@ -13,7 +13,6 @@ const audiences=[
  {n:'04',icon:'⚙',title:'FORNECEDORES & PRESTADORES',copy:'Máquinas, insumos, tecnologia e serviços que fazem toda a cadeia avançar.',accent:'cyan'},
  {n:'05',icon:'＋',title:'ESTUDANTES & PROFISSIONAIS',copy:'Quem quer entrar, se atualizar e construir carreira na nova economia têxtil.',accent:'yellow'}
 ];
-
 function normalizeSchedule(rows,day){return (rows||[]).filter(x=>String(x.event_day).includes(`2026-09-${day}`)).map(x=>({time:(x.starts_at||'').slice(0,5).replace(':','h'),title:x.title,description:x.description||''}));}
 
 export default async function Home(){
@@ -34,7 +33,7 @@ export default async function Home(){
  return <main className="v3site">
    <header className="v3nav"><a href="#inicio" className="v3brand"><img src="/brand-lockup.webp" alt="Expo Franca Têxtil Summit"/></a><nav><a href="#expositores">Expositores</a><a href="#programacao">Programação</a><a href="#noticias">Notícias</a><a href={instagramUrl} target="_blank" rel="noopener">Instagram</a></nav><a className="v3navTicket" href={ticketUrl} target="_blank" rel="noopener">Ingresso ↗</a></header>
    <HeroVideo ticketUrl={ticketUrl} whatsappUrl={whatsappUrl} location={location}/>
-   <TextileJourney3D/>
+   <TextileJourneyVideo/>
    <section id="expositores" className="v3section logoSection"><div className="v3wrap"><div className="v3sectionHead"><span>02 / ÁREA DE NEGÓCIOS</span><h2>MARCAS QUE JÁ<br/><em>ESTÃO NA TRAMA.</em></h2><p>Expositores confirmados apresentados em movimento contínuo.</p></div><LogoCarousel/></div></section>
    <section id="programacao" className="v3section programSection"><div className="v3wrap programV3Grid"><div className="programIntro"><span>03 / PROGRAMAÇÃO</span><h2>DOIS DIAS.<br/><em>MUITO CONTEÚDO.</em></h2><p>Conteúdo aplicado para quem quer produzir, operar, vender e crescer. A agenda continua alimentada pelo CMS.</p></div><ProgramSchedule items16={items16} items17={agenda17}/></div></section>
    <section className="v3section audienceSection"><div className="audienceGlow"/><div className="v3wrap"><div className="audienceHeader"><div className="audienceTitle"><span>04 / PARA QUEM É</span><h2>TODA A CADEIA<br/><em>NO MESMO LUGAR.</em></h2></div><p>Do chão de fábrica à venda digital. O Summit foi desenhado para aproximar quem produz, quem fornece, quem cria e quem coloca o produto no mercado.</p></div><div className="audienceGrid">{audiences.map(a=><article key={a.n} className={`audienceCard ${a.accent}`}><div className="audienceTop"><small>{a.n}</small><i>{a.icon}</i></div><div><b>{a.title}</b><p>{a.copy}</p></div><span className="audienceLine"/></article>)}</div></div></section>
