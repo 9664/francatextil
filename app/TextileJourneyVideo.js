@@ -3,7 +3,7 @@
 import {useEffect,useRef,useState} from 'react';
 
 const SCENES=[
-  {kicker:'01 / ORIGEM',title:'TUDO COMEÇA NO FIO.',copy:'É aqui que a cadeia começa: matéria-prima, textura e possibilidade.',source:{type:'b64',parts:['/journey-exact/01-0.b64','/journey-exact/01-1.b64']},focus:'58% 50%'},
+  {kicker:'01 / ORIGEM',title:'TUDO COMEÇA NO FIO.',copy:'É aqui que a cadeia começa: matéria-prima, textura e possibilidade.',source:{type:'b64',parts:['/journey-novelo/part00.b64','/journey-novelo/part01.b64','/journey-novelo/part02.b64','/journey-novelo/part03.b64','/journey-novelo/part04.b64','/journey-novelo/part05.b64','/journey-novelo/part06.b64','/journey-novelo/part07.b64']},focus:'58% 50%'},
   {kicker:'02 / PRECISÃO',title:'A LINHA ENCONTRA A AGULHA.',copy:'Técnica e detalhe transformam intenção em construção.',source:{type:'b64',url:'/journey-hires/s2.b64'},focus:'50% 50%'},
   {kicker:'03 / COSTURA',title:'A PRODUÇÃO GANHA RITMO.',copy:'Máquinas, processos e conhecimento colocam a indústria em movimento.',source:{type:'b64',url:'/journey-exact/03.b64'},focus:'50% 50%'},
   {kicker:'04 / PRODUTO',title:'DO PROCESSO NASCE VALOR.',copy:'A peça pronta reúne design, produção, marca e identidade.',source:{type:'b64',url:'/journey-exact/04.b64'},focus:'50% 52%'},
@@ -84,10 +84,10 @@ export default function TextileJourneyVideo(){
   return <section ref={sectionRef} id="do-fio-ao-clique" className="cinematicJourney stillJourney"><div className="cinematicSticky">
     <div className="stillStack" aria-hidden="true">{SCENES.map((s,i)=>{
       if(!assets[i])return null;
-      const d=Math.abs(stage-i);
-      const opacity=clamp(1-d*1.55);
-      const local=clamp(stage-i+1,0,1);
-      const scale=1.015+(local*.075);
+      const distance=Math.abs(stage-i);
+      const opacity=clamp(1-distance*1.15);
+      const transition=clamp(stage-i,0,1);
+      const scale=1.015+(transition*.11);
       return <img key={i} src={assets[i]} className="journeyStill" alt="" style={{opacity,transform:`scale(${scale})`,objectPosition:s.focus}}/>;
     })}</div>
     <div className="stillVignette" aria-hidden="true"/>
