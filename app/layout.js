@@ -1,6 +1,7 @@
 import './globals.css';
 import './v3.css';
 import './program.css';
+import './audience-v3.css';
 
 export const metadata={
  title:'Expo Franca Têxtil Summit 2026',
