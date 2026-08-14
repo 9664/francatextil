@@ -5,7 +5,6 @@ import './audience-v3.css';
 import './journey-video.css';
 import './v5-media.css';
 import './logo-section-fixes.css';
-import LogoAssetFixes from './LogoAssetFixes';
 
 export const metadata={
  title:'Expo Franca Têxtil Summit 2026',
@@ -14,4 +13,4 @@ export const metadata={
  openGraph:{title:'Expo Franca Têxtil Summit 2026',description:'A nova indústria têxtil acontece aqui.',type:'website',locale:'pt_BR',images:[{url:'/opengraph-image',width:1200,height:630,alt:'Expo Franca Têxtil Summit 2026'}]},
  twitter:{card:'summary_large_image',images:['/opengraph-image']}
 };
-export default function RootLayout({children}){return <html lang="pt-BR"><body><LogoAssetFixes/>{children}</body></html>}
+export default function RootLayout({children}){return <html lang="pt-BR"><body>{children}</body></html>}
