@@ -1,3 +1,7 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+
 const exhibitors=[
 {name:'GOL TÊXTIL',position:'0% 0%'},
 {name:'DISTRIBUIDOR DE CAMISETAS',position:'100% 100%'},
@@ -20,5 +24,35 @@ const exhibitors=[
 {name:'ZANONE CURSOS',position:'0% 33.3333%'},
 {name:'ZANONE MALHAS',position:'100% 0%'}
 ];
-function LogoRun({hidden=false}){return <div className="logoRun" aria-hidden={hidden||undefined}>{exhibitors.map(item=><figure className="exhibitorSlide" key={`${item.name}-${hidden?'b':'a'}`} title={item.name}><div className="exhibitorSprite" style={{backgroundPosition:item.position}} role={hidden?undefined:'img'} aria-label={hidden?undefined:`Expositor confirmado ${item.name}`}/></figure>)}</div>}
-export default function LogoCarousel(){return <><div className="exhibitorIntro"><div><strong>20</strong><span>EXPOSITORES CONFIRMADOS</span></div><p>Indústria, máquinas, impressão, serviços, logística, formação e venda digital reunidos na mesma trama.</p></div><div className="logoCarousel" aria-label="Carrossel com 20 expositores confirmados"><div className="logoRail"><LogoRun/><LogoRun hidden/></div></div></>}
+
+const spriteParts=['/exhibitor-sprite-v3/part00.b64','/exhibitor-sprite-v3/part01.b64'];
+
+function decodeBase64ToBlob(encoded,type='image/webp'){
+  const clean=encoded.replace(/\s+/g,'');
+  const binary=atob(clean);
+  const bytes=new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+  return new Blob([bytes],{type});
+}
+
+function LogoRun({hidden=false,spriteUrl}){
+  return <div className="logoRun" aria-hidden={hidden||undefined}>{exhibitors.map(item=><figure className="exhibitorSlide" key={`${item.name}-${hidden?'b':'a'}`} title={item.name}><div className="exhibitorSprite" style={{backgroundPosition:item.position,backgroundImage:spriteUrl?`url(${spriteUrl})`:undefined}} role={hidden?undefined:'img'} aria-label={hidden?undefined:`Expositor confirmado ${item.name}`}/></figure>)}</div>;
+}
+
+export default function LogoCarousel(){
+  const [spriteUrl,setSpriteUrl]=useState('');
+  useEffect(()=>{
+    let alive=true;
+    let objectUrl='';
+    Promise.all(spriteParts.map(src=>fetch(src,{cache:'force-cache'}).then(r=>{if(!r.ok)throw new Error(src);return r.text();})))
+      .then(parts=>{
+        if(!alive)return;
+        objectUrl=URL.createObjectURL(decodeBase64ToBlob(parts.join('')));
+        setSpriteUrl(objectUrl);
+      })
+      .catch(err=>console.error('Falha ao carregar sprite dos expositores',err));
+    return()=>{alive=false;if(objectUrl)URL.revokeObjectURL(objectUrl);};
+  },[]);
+
+  return <><div className="exhibitorIntro"><div><strong>20</strong><span>EXPOSITORES CONFIRMADOS</span></div><p>Indústria, máquinas, impressão, serviços, logística, formação e venda digital reunidos na mesma trama.</p></div><div className={`logoCarousel ${spriteUrl?'isReady':''}`} aria-label="Carrossel com 20 expositores confirmados"><div className="logoRail"><LogoRun spriteUrl={spriteUrl}/><LogoRun hidden spriteUrl={spriteUrl}/></div></div></>;
+}
