@@ -23,7 +23,6 @@ export const exhibitors: Exhibitor[] = [
   { name: "MAQCENTER", category: "MAQUINÁRIO", image: `${media}/maqcenter.jpg.jpeg` },
   { name: "BM DO BRASIL", category: "MAQUINÁRIO", image: `${media}/bm do brasil.jpg.jpeg` },
   { name: "MAGNA TECH", category: "MAQUINÁRIO", image: `${media}/magnatech.jpg.jpeg` },
-  { name: "STELLAR PRINT", category: "ESTAMPARIA", image: `${media}/stellar.jpg.jpeg` },
   { name: "CONTÁBIL ZANONE", category: "CONTABILIDADE", image: `${media}/zanonecontabil.jpg.jpeg` },
   { name: "ZANONE CURSOS", category: "CURSOS", image: `${media}/zanone cursos.jpg.jpeg` },
   { name: "ZANONE MALHAS", category: "INDÚSTRIA TÊXTIL", image: `${media}/zanone.jpg.jpeg` },
