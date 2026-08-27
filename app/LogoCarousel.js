@@ -17,7 +17,6 @@ const exhibitors = [
   {name:'MAQCENTER COSTURA',src:'/media/expositores/maqcenter.jpg.jpeg'},
   {name:'BM DO BRASIL',src:'/media/expositores/bm%20do%20brasil.jpg.jpeg'},
   {name:'MAGNA TECH',src:'/media/expositores/magnatech.jpg.jpeg'},
-  {name:'STELLAR PRINT',src:'/media/expositores/stellar.jpg.jpeg'},
   {name:'CONTÁBIL ZANONE',src:'/media/expositores/zanonecontabil.jpg.jpeg'},
   {name:'ZANONE CURSOS',src:'/media/expositores/zanone%20cursos.jpg.jpeg'},
   {name:'ZANONE MALHAS',src:'/media/expositores/zanone.jpg.jpeg'}
@@ -40,10 +39,10 @@ function LogoRun({hidden=false}){
 export default function LogoCarousel(){
   return <>
     <div className="exhibitorIntro">
-      <div><strong>20</strong><span>EXPOSITORES CONFIRMADOS</span></div>
+      <div><strong>19</strong><span>EXPOSITORES CONFIRMADOS</span></div>
       <p>Indústria, máquinas, impressão, serviços, logística, formação e venda digital reunidos na mesma trama.</p>
     </div>
-    <div className="logoCarousel isReady" aria-label="Carrossel com 20 expositores confirmados">
+    <div className="logoCarousel isReady" aria-label="Carrossel com 19 expositores confirmados">
       <div className="logoRail"><LogoRun/><LogoRun hidden/></div>
     </div>
   </>;
