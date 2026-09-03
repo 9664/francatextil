@@ -1,6 +1,13 @@
 import { publicQuery } from '../../../lib/supabase';
 import { notFound } from 'next/navigation';
 
+export const dynamicParams = false;
+
+export async function generateStaticParams(){
+  const rows=await publicQuery('articles?select=slug&status=eq.published&order=published_at.desc');
+  return (rows||[]).filter(a=>a?.slug).map(a=>({slug:String(a.slug)}));
+}
+
 export async function generateMetadata({params}){
   const {slug}=await params;
   const rows=await publicQuery(`articles?select=seo_title,seo_description,title,excerpt,cover_url&slug=eq.${encodeURIComponent(slug)}&status=eq.published&limit=1`);
